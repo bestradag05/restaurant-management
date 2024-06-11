@@ -90,4 +90,12 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toSmallDto)
                 .toList();
     }
+
+    @Override
+    public List<CategorySmallDto> findByName(String name) {
+        return categoryRepository.findByName(name)
+                .stream()
+                .map(categoryMapper::toSmallDto)
+                .toList();
+    }
 }

@@ -4,6 +4,9 @@ import com.iroman.restaurantmanagement.application.dto.category.CategoryBodyDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategoryDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategorySaveDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategorySmallDto;
+import com.iroman.restaurantmanagement.persistence.entity.Category;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 
 import java.util.List;
@@ -18,4 +21,6 @@ public interface CategoryService {
     CategorySaveDto disable(Long id);
 
     List<CategorySmallDto> finByState(String state);
+
+    List<CategorySmallDto> findByName(String name);
 }
