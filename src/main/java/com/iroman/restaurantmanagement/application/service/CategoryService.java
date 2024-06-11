@@ -1,13 +1,15 @@
 package com.iroman.restaurantmanagement.application.service;
 
-import com.iroman.restaurantmanagement.persistence.entity.Category;
+import com.iroman.restaurantmanagement.application.dto.category.CategoryDto;
+import com.iroman.restaurantmanagement.application.dto.category.CategorySmallDto;
+
 
 import java.util.List;
 
 public interface CategoryService {
 
 
-    List<Category> findAll();
-    Category findById(Long id);
+    List<CategorySmallDto> findAll();
+    CategoryDto findById(Long id);
 
 }
