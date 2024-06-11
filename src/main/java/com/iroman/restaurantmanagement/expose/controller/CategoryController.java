@@ -45,6 +45,12 @@ public class CategoryController {
         return categoryService.findByName(name);
     }
 
+    @GetMapping("/filters")
+    public List<CategorySmallDto> findAllByFilters(@RequestParam(value = "name", required = false) String name,
+                                                   @RequestParam(value = "state", required = false) String state){
+        return categoryService.findAllByFilters(name, state);
+    }
+
 
     @PostMapping
     public CategorySaveDto create(@RequestBody CategoryBodyDto categoryBodyDto) {

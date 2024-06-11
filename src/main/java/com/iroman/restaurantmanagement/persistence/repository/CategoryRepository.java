@@ -17,8 +17,13 @@ public interface CategoryRepository extends ListCrudRepository<Category, Long> {
     )
     List<Category> findByName(@Param("name") String name);
 
-//    @Query(value = "SELECT c FROM Category c WHERE UPPER(c.name) LIKE UPPER(CONCAT('%', :name, '%'))")
-//    List<Category> findByName(@Param("name") String name);
+    @Query(value = "SELECT c FROM Category  c " +
+    "WHERE ( :#{#name} IS NULL OR UPPER(c.name) LIKE UPPER(CONCAT('%' ,:name, '%')) ) "+
+    "AND ( :#{#state} IS NULL OR UPPER(c.state) = UPPER(:state) ) "
+
+    )
+    List<Category> findAllByFilter(@Param("name") String name, @Param("state") String state);
+
 
 
 

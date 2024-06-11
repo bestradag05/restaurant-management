@@ -23,4 +23,6 @@ public interface CategoryService {
     List<CategorySmallDto> finByState(String state);
 
     List<CategorySmallDto> findByName(String name);
+
+    List<CategorySmallDto> findAllByFilters(String name, String state);
 }
