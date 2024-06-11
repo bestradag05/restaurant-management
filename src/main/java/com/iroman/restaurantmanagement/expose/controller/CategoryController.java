@@ -2,25 +2,26 @@ package com.iroman.restaurantmanagement.expose.controller;
 
 //Anotaciones de Spring
 
+import com.iroman.restaurantmanagement.application.dto.category.CategoryBodyDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategoryDto;
+import com.iroman.restaurantmanagement.application.dto.category.CategorySaveDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategorySmallDto;
 import com.iroman.restaurantmanagement.application.service.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//Lombok Annotations
+@RequiredArgsConstructor
+
+// Spring Stereotype annotation
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public List<CategorySmallDto> findAll() {
@@ -34,5 +35,19 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
+    @PostMapping
+    public CategorySaveDto create(@RequestBody CategoryBodyDto categoryBodyDto) {
+        return categoryService.create(categoryBodyDto);
+    }
+
+    @PutMapping("/{id}")
+    public CategorySaveDto update(@PathVariable("id") Long id, @RequestBody CategoryBodyDto categoryBodyDto) {
+        return categoryService.update(id, categoryBodyDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public CategorySaveDto disabled(@PathVariable("id") Long id) {
+        return categoryService.disable(id);
+    }
 
 }

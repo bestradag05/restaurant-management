@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class Category implements Serializable {
     //Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
