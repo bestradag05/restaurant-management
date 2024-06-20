@@ -9,12 +9,14 @@ import com.iroman.restaurantmanagement.application.mapper.CategoryMapper;
 import com.iroman.restaurantmanagement.application.service.CategoryService;
 import com.iroman.restaurantmanagement.persistence.entity.Category;
 import com.iroman.restaurantmanagement.persistence.repository.CategoryRepository;
+import com.iroman.restaurantmanagement.shared.exception.DataNotFoundException;
 import com.iroman.restaurantmanagement.shared.state.enums.State;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
 //Lombok annotations
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findById(Long id) {
+    public CategoryDto findById(Long id) throws DataNotFoundException {
         // Programacion imperativa
 
         //        Category category = categoryRepository.findById(id).orElse(null);
@@ -49,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryRepository.findById(id)
                 .map(category -> categoryMapper.toDto(category))
-                .orElse(null);
+                .orElseThrow(() -> categoryDataNotFoundExceptionSupplier(id));
 
     }
 
@@ -63,9 +65,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategorySaveDto update(Long id, CategoryBodyDto categoryBodyDto) {
+    public CategorySaveDto update(Long id, CategoryBodyDto categoryBodyDto)  throws DataNotFoundException{
 
-        Category category = categoryRepository.findById(id).get();
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> categoryDataNotFoundExceptionSupplier(id));;
 
         categoryMapper.updateEntity(category, categoryBodyDto);
         category.setUpdatedAt(LocalDateTime.now());
@@ -73,9 +76,16 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toSavedDto(categoryRepository.save(category));
     }
 
+
+    private DataNotFoundException categoryDataNotFoundExceptionSupplier (Long id){
+        return new DataNotFoundException("Category not found with id: " + id);
+    }
+
+
     @Override
-    public CategorySaveDto disable(Long id) {
-        Category category = categoryRepository.findById(id).get();
+    public CategorySaveDto disable(Long id) throws DataNotFoundException {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> categoryDataNotFoundExceptionSupplier(id));
         category.setState(State.DISABLED.getValue());
 
 

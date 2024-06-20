@@ -1,6 +1,8 @@
 package com.iroman.restaurantmanagement.expose.exception;
 
+import com.iroman.restaurantmanagement.shared.exception.DataNotFoundException;
 import com.iroman.restaurantmanagement.shared.exception.model.ArgumentNotValidError;
+import com.iroman.restaurantmanagement.shared.exception.model.GeneralError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +38,20 @@ public class ApplicationExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(response);
 
+
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<GeneralError> handleDataNotFound(DataNotFoundException exception){
+
+        GeneralError response = new GeneralError();
+
+
+        response.setMessage(exception.getMessage());
+
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(response);
 
     }
 }

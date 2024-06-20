@@ -1,4 +1,7 @@
 package com.iroman.restaurantmanagement.shared.exception;
 
-public class DataNotFoundException {
+public class DataNotFoundException extends Exception{
+    public DataNotFoundException(String message){
+        super(message);
+    }
 }
