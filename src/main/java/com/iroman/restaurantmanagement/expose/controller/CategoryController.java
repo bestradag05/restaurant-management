@@ -7,9 +7,19 @@ import com.iroman.restaurantmanagement.application.dto.category.CategoryDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategorySaveDto;
 import com.iroman.restaurantmanagement.application.dto.category.CategorySmallDto;
 import com.iroman.restaurantmanagement.application.service.CategoryService;
+import com.iroman.restaurantmanagement.shared.constant.StatusCode;
 import com.iroman.restaurantmanagement.shared.exception.DataNotFoundException;
+import com.iroman.restaurantmanagement.shared.exception.model.ArgumentNotValidError;
+import com.iroman.restaurantmanagement.shared.exception.model.GeneralError;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,49 +34,115 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-
+    @ApiResponse(responseCode = StatusCode.OK, description = "List of all categories")
     @GetMapping
-    public List<CategorySmallDto> findAll() {
+    public ResponseEntity<List<CategorySmallDto>> findAll() {
 
-        return categoryService.findAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.findAll());
 
     }
 
+
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "Category by id")
+    @ApiResponse(
+            responseCode = StatusCode.NOT_FOUND,
+            description = "Category by id",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = GeneralError.class)
+            )
+    )
     @GetMapping("/{id}")
-    public CategoryDto findById(@PathVariable("id") Long id) throws DataNotFoundException {
-        return categoryService.findById(id);
+    public ResponseEntity<CategoryDto>  findById(@PathVariable("id") Long id) throws DataNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.findById(id));
     }
 
+
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "List of categories by state")
     @GetMapping("/state/{state}")
-    public List<CategorySmallDto> finByState(@PathVariable("state") String state){
-        return categoryService.finByState(state);
+    public ResponseEntity<List<CategorySmallDto>>  finByState(@PathVariable("state") String state){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.finByState(state));
     }
 
+
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "List of categories by name")
     @GetMapping("/name/{name}")
-    public  List<CategorySmallDto> findByName(@PathVariable("name") String name){
-        return categoryService.findByName(name);
+    public ResponseEntity<List<CategorySmallDto>>  findByName(@PathVariable("name") String name){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.findByName(name));
     }
 
+
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "List of categories by filters")
     @GetMapping("/filters")
-    public List<CategorySmallDto> findAllByFilters(@RequestParam(value = "name", required = false) String name,
+    public ResponseEntity<List<CategorySmallDto>> findAllByFilters(@RequestParam(value = "name", required = false) String name,
                                                    @RequestParam(value = "state", required = false) String state){
-        return categoryService.findAllByFilters(name, state);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.findAllByFilters(name, state));
     }
 
 
+    @ApiResponse(responseCode = StatusCode.CREATED, description = "Category created")
+    @ApiResponse(
+            responseCode = StatusCode.BAD_REQUEST,
+            description = "Invalid data",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ArgumentNotValidError.class)
+            )
+    )
     @PostMapping
-    public CategorySaveDto create(@Valid @RequestBody CategoryBodyDto categoryBodyDto) {
-        return categoryService.create(categoryBodyDto);
+    public ResponseEntity<CategorySaveDto> create(@Valid @RequestBody CategoryBodyDto categoryBodyDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(categoryService.create(categoryBodyDto));
     }
 
+
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "Category updated")
+    @ApiResponse(
+            responseCode = StatusCode.NOT_FOUND,
+            description = "Category not found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = GeneralError.class)
+            )
+    )
+    @ApiResponse(
+            responseCode = StatusCode.BAD_REQUEST,
+            description = "Invalid data",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ArgumentNotValidError.class)
+            )
+    )
     @PutMapping("/{id}")
-    public CategorySaveDto update(@PathVariable("id") Long id,@Valid  @RequestBody CategoryBodyDto categoryBodyDto) throws DataNotFoundException {
-        return categoryService.update(id, categoryBodyDto);
+    public ResponseEntity<CategorySaveDto> update(@PathVariable("id") Long id,@Valid  @RequestBody CategoryBodyDto categoryBodyDto) throws DataNotFoundException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.update(id, categoryBodyDto));
     }
 
+
+    @ApiResponse(responseCode = StatusCode.OK, description = "Category disabled")
+    @ApiResponse(
+            responseCode = StatusCode.NOT_FOUND,
+            description = "Category not found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = GeneralError.class)
+            )
+    )
     @DeleteMapping("/{id}")
-    public CategorySaveDto disabled(@PathVariable("id") Long id) throws DataNotFoundException{
-        return categoryService.disable(id);
+    public ResponseEntity<CategorySaveDto> disabled(@PathVariable("id") Long id) throws DataNotFoundException{
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.disable(id));
     }
 
 }
