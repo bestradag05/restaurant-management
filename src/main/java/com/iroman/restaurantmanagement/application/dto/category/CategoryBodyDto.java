@@ -17,7 +17,7 @@ public class CategoryBodyDto {
     private String name;
 
 
-    @Size(max = 255, message = "Name must be between 3 and 255 characters")
+    @Size(max = 255, message = "Description must be between 3 and 255 characters")
     private String description;
 
 }
